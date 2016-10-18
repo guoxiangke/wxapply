@@ -34,13 +34,14 @@
 }
 
 .open .weui-flex {
-    opacity: .4;
+    opacity: .5;
 }
 
 .d-button-play{
   width: 45rpx;
   height: 45rpx;
   transition: 400ms;
+  opacity: .6;
 }
 .category-item.open .image-button-list {
   transform: rotate(90deg);

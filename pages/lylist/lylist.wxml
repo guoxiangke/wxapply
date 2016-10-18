@@ -14,8 +14,10 @@
             <view class="page__category ly_subcategory_list">
                 <view wx:if="{{categoryItem.name==lylistItem.category}}" class="lylist" wx:for="{{lylist_data}}" wx:for-item="lylistItem"  wx:for-index="lylistIndex">
                     <view  class="category weui-cell" >
-                        <icon  catchtap="bindViewTapDownload" id="{{lylistIndex}}" data-key="{{lylistItem.key}}" data-name="{{lylistItem.title}}" data-title="{{lylistItem.title}}" class="widgets__info-img d-button" type="success" color="green"/>
+                        <icon  catchtap="{{current_downloaded_id==lylistIndex?'bindViewTapPlay':'bindViewTapDownload'}}" id="{{lylistIndex}}" data-key="{{lylistItem.key}}" data-playstate="{{current_play_id==lylistIndex?0:1}}" data-name="{{lylistItem.title}}" data-downloadad="{{current_downloaded_id==lylistIndex?1:0}}" data-title="{{lylistItem.title}}" class="widgets__info-img d-button" type="download" color="{{current_downloaded_id==lylistIndex?'grey':'#BDBDC0'}}"/>
+
                         <text class="widgets__info-name">【{{lylistItem.index}}】{{lylistItem.title}}</text>
+
                         <image catchtap="bindViewTapPlay" id="{{lylistIndex}}" data-title="{{lylistItem.title}}" data-key="{{lylistItem.key}}" data-playstate="{{current_play_id==lylistIndex?0:1}}" class="image-button d-button d-button-img d-button-play {{lylistItem.opened ? 'play' : 'stop'}}" src="resources/playerbar_{{current_play_id==lylistIndex?'pause':'play'}}.png" background-size="cover" />
                     </view>
                 </view>

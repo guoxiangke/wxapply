@@ -9,7 +9,8 @@ Page({
   data: {
       lylist_data  :'',
       lylist_categorys: '',
-      current_play_id : -1
+      current_play_id : -1,
+      current_downloaded_id : -1,
   },
   //事件处理函数
   bindViewTapMenu: function (e) {
@@ -37,11 +38,16 @@ Page({
           url: 'http://wx.yongbuzhixi.com/get_upyun_token/'+e.target.dataset.key,
           success: function(res) {
             var music_url = res.data[0]
+            //set page var id.url
             var changeData = {}
             changeData['lylist_data[' + id + '].url'] = music_url
+            changeData['lylist_data[' + id + '].downloaded'] = 1
             that.setData(changeData)
+            that.setData({
+                current_downloaded_id : id,
+            })
             console.log('0000',music_url)
-            console.log('lylist_data.update when download!')
+            console.log('lylist_data.update when download!',id)
 
             wx.downloadFile({
               url: music_url,
@@ -53,11 +59,14 @@ Page({
                 console.log(res,'downloadFile.complete')
               },
               success: function(res) {
+
                 var tempFilePath = res.tempFilePath
                 console.log(tempFilePath,'res.tempFilePath')
                 wx.saveFile({
                   tempFilePath: tempFilePath,
                   success: function(res) {
+                    //set page var id.downloaded
+                    // we also need save global data!
                     var savedFilePath = res.savedFilePath
                     console.log(res.savedFilePath,'res.savedFilePath')
                     var id = music_url.match(/[a-z]+\d{6}/)
@@ -241,6 +250,7 @@ Page({
         // if (!ly_data.hasOwnProperty(k)) continue;
         ly_data[k].key = k
         ly_data[k].url = false
+        ly_data[k].downloaded = false
         res.push(ly_data[k])
     }
     this.setData({
