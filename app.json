@@ -1,6 +1,7 @@
 {
   "pages":[
     "pages/lylist/lylist",
+    "pages/bg-audio/bg-audio",
     "pages/index/index",
     "pages/play/play",
     "pages/logs/logs"
@@ -10,6 +11,30 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "轻轻听",
     "navigationBarTextStyle":"black"
-  }
+  },
+  "tabBar": {
+    "color": "#dddddd",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [{
+      "pagePath": "pages/lylist/lylist",
+      "iconPath": "image/wechat.png",
+      "selectedIconPath": "image/wechatHL.png",
+      "text": "今日节目"
+    }, {
+      "pagePath": "pages/index/index",
+      "iconPath": "image/wechat.png",
+      "selectedIconPath": "image/wechatHL.png",
+      "text": "我的收藏"
+    }]
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  },
+  "debug": true
 
 }

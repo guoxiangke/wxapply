@@ -41,8 +41,9 @@ Page({
             //set page var id.url
             var changeData = {}
             changeData['lylist_data[' + id + '].url'] = music_url
-            changeData['lylist_data[' + id + '].downloaded'] = 1
+            changeData['lylist_data[' + id + '].downloaded'] = id
             that.setData(changeData)
+
             that.setData({
                 current_downloaded_id : id,
             })
@@ -89,6 +90,9 @@ Page({
                         })
                     }
 
+                    var changeData = {}
+                    changeData['lylist_data[' + id + '].localpath'] = savedFilePath
+                    that.setData(changeData)
                   },
                   fail: function(res){
                     console.log(res,'saveFile.fail')
@@ -102,7 +106,7 @@ Page({
       })
   },
   bindViewTapPlay: function(e) {
-    console.log('播放暂停键点击 bindViewTapPlay',e)
+    console.log('播放暂停键点击或downloadPlay bindViewTapPlay',e)
     var id = parseInt(e.currentTarget.id) //0-50
     var that = this
     //如果 已经播放，则停止播放，设置 playState: 0,
@@ -136,7 +140,13 @@ Page({
     if(this.data['lylist_data'][id].url){
         console.warn('already has url no need request,then play the url plz!')
         //TODO:copy blow play code here!
+
             var music_url = this.data['lylist_data'][id].url
+            //入果已经下载使用下载的本地文件播放
+            if(this.data['lylist_data'][id].localpath){
+                music_url = this.data['lylist_data'][id].url
+                console.log(this.data['lylist_data'][id].localpath,'play local downloaded music');
+            }
             var title = this.data['lylist_data'][id].title
             {//如果点击播放，然后暂停，然后再次播放时，从上次位置播放
                 wx.getBackgroundAudioPlayerState({
@@ -246,11 +256,27 @@ Page({
     var ly_data = lyutil.get_ly_data();
 
     var res = []
+    var date = new Date()
+    var year = date.getFullYear()-2000
+    var month = date.getMonth() + 1
+    var day = date.getDate()
+    var today = year.toString() + month.toString() + day.toString()
+    console.log(today,'today')
     for (var k in ly_data){
         // if (!ly_data.hasOwnProperty(k)) continue;
         ly_data[k].key = k
         ly_data[k].url = false
         ly_data[k].downloaded = false
+        var downloads=wx.getStorageSync('downloads')
+        for (var i in downloads) {
+            var id = k + today
+            if(downloads[i].id == id){
+                console.log(id,'id')
+                ly_data[k].url = downloads[i].url
+                ly_data[k].downloaded = downloads[i].localpath
+            }
+
+        }
         res.push(ly_data[k])
     }
     this.setData({

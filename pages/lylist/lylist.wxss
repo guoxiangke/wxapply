@@ -43,6 +43,13 @@
   transition: 400ms;
   opacity: .6;
 }
+.image-button-play{
+    width: 16px;
+    height: 16px;
+    padding-left: 20px;
+    display: inline-block;
+}
+
 .category-item.open .image-button-list {
   transform: rotate(90deg);
 }
@@ -56,4 +63,15 @@
   transition: 200ms;
   height: auto;
   border-top: 1px solid #d8d8d8;
+}
+
+
+.bgaudioplaystage{
+    background: #FBF9FE;
+    border-bottom: 1px solid #d8d8d8;
+    opacity: .6;
+}
+
+.bgaudioplaystage text{
+    padding-left: 10px;
 }
