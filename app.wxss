@@ -1,6 +1,6 @@
 /**app.wxss**/
 .container {
-    background-color: #FBF9FE;
+    background-color: #fcf9fe;
     line-height: 1.6;
     font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
    /* flex: 1;
@@ -11,6 +11,9 @@
     justify-content: space-between;
     min-height: 100%;
     font-size: 16px;
+}
+.hide{
+  display: none !important;
 }
 
 .head{

@@ -108,6 +108,9 @@ Page({
   bindViewTapPlay: function(e) {
     console.log('播放暂停键点击或downloadPlay bindViewTapPlay',e)
     var id = parseInt(e.currentTarget.id) //0-50
+    var lycode = e.target.dataset.key //ee
+    var lyindex = e.target.dataset.lyindex //601
+    var title = e.target.dataset.title //拥抱每一天
     var that = this
     //如果 已经播放，则停止播放，设置 playState: 0,
     var currentMusic = wx.getStorageSync('currentMusic')
@@ -118,15 +121,20 @@ Page({
         console.log('pauseBackgroundAudio',currentMusic.title);
         var changeData = {
           id: currentMusic.id,
+          key: currentMusic.key,
+          lyindex: currentMusic.lyindex,
           playState: 0,
           url: currentMusic.url,
           title: currentMusic.title,
         }
         wx.setStorage({
             key : 'currentMusic',
-            data :changeData
+            data : changeData
         })
         //current_play_id
+        var changeData = {}
+        changeData['currentMusic.playState'] = 0
+        this.setData(changeData)
         that.setData({
             current_play_id: -1,
         })
@@ -147,11 +155,10 @@ Page({
                 music_url = this.data['lylist_data'][id].url
                 console.log(this.data['lylist_data'][id].localpath,'play local downloaded music');
             }
-            var title = this.data['lylist_data'][id].title
             {//如果点击播放，然后暂停，然后再次播放时，从上次位置播放
                 wx.getBackgroundAudioPlayerState({
                     success: function(res) {
-                    console.log(res,'getBackgroundAudioPlayerState')
+                        console.log(res,'getBackgroundAudioPlayerState')
                         // var status = res.status
                         var dataUrl = res.dataUrl
                         var currentPosition = res.currentPosition
@@ -162,7 +169,20 @@ Page({
                             wx.seekBackgroundAudio({
                                 position: currentPosition
                             })
-                            return
+                            //
+                            //
+                            var changeData = {
+                              id: id,
+                              key: lycode,
+                              lyindex: lyindex,
+                              playState: 1,
+                              url: music_url,
+                              title: title,
+                            }
+                            wx.setStorage({
+                                key : 'currentMusic',
+                                data :changeData
+                            })
                         }
                     }
                 })
@@ -175,6 +195,8 @@ Page({
                 console.log(music_url,'playBackgroundAudio.complete: '+id)
                 var changeData = {
                   id: id,
+                  key: lycode,
+                  lyindex: lyindex,
                   playState: 1,
                   url: music_url,
                   title: title,
@@ -184,6 +206,10 @@ Page({
                     data :changeData
                 })
 
+                var changeData = {}
+                changeData['currentMusic.playState'] = 1
+                that.setData(changeData)
+
               }
             })
         return
@@ -192,7 +218,7 @@ Page({
     // 'http://lywxaudio.yongbuzhixi.com/2016/cw/cw161010.mp3?_upt=65b2303a1476180249',
     // http://wx.yongbuzhixi.com/get_upyun_token/ee
     wx.request({
-        url: 'http://wx.yongbuzhixi.com/get_upyun_token/'+e.target.dataset.key,
+        url: 'http://wx.yongbuzhixi.com/get_upyun_token/'+lycode,
         success: function(res) {
             var music_url = res.data[0]
             // var ly_data = lyutil.get_ly_data()
@@ -221,6 +247,8 @@ Page({
                 console.log(music_url,'playBackgroundAudio.complete: '+id)
                 var changeData = {
                   id: id,
+                  key: lycode,
+                  lyindex: e.target.dataset.lyindex,
                   playState: 1,
                   url: music_url,
                   title: e.target.dataset.title,
@@ -228,6 +256,9 @@ Page({
                 wx.setStorage({
                     key : 'currentMusic',
                     data :changeData
+                })
+                that.setData({
+                    currentMusic : changeData,
                 })
 
               }
@@ -247,12 +278,42 @@ Page({
         if(res.data.playState){
             that.setData({
                 current_play_id: res.data.id,
-                current_play_url: res.data.url,
+                currentMusic : res.data,
             })
         }
       }
     })
 
+    //背景音乐播放停止时！
+    wx.onBackgroundAudioStop(function () {
+      that.setData({
+        current_play_id: -1,
+      })
+      //页面变量
+      var changeData = {}
+      changeData['currentMusic.playState'] = 0
+      that.setData(changeData)
+      //全局变量
+      var currentMusic = wx.getStorageSync('currentMusic')
+        var changeData = {
+          id: currentMusic.id,
+          key: currentMusic.key,
+          lyindex: currentMusic.lyindex,
+          playState: 0,
+          url: currentMusic.url,
+          title: currentMusic.title,
+        }
+        wx.setStorage({
+            key : 'currentMusic',
+            data : changeData
+        })
+    })
+
+
+
+
+
+    //所有节目
     var ly_data = lyutil.get_ly_data();
 
     var res = []
@@ -284,6 +345,7 @@ Page({
         lylist_data : res
     })
 
+    //目录分类
     var ly_data_categorys = lyutil.get_lylist_categorys()
     var res = []
     for (var i in ly_data_categorys) {
