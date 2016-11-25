@@ -24,41 +24,6 @@ Page({
       this.setData(changeData)
     }
   },
-  //本地收藏！
-  bindViewTapFav: function(e){
-    console.log(e,'res.bindViewTapFav')
-    // var id = parseInt(e.currentTarget.id) //0-50
-    var lycode = e.target.dataset.key //ee
-    var lyindex = e.target.dataset.lyindex //601
-    var title = e.target.dataset.title //拥抱每一天
-    var that = this
-    var today = wx.getStorageSync('today')
-
-    var id = lycode + today;
-    var fav = {
-      id: id,//'se160901',
-      key: lycode,
-      title: title,
-      date: today,
-    }
-    var favs=wx.getStorageSync('favs')
-    if (1) {
-        console.log(favs,'oldfavs')
-        if(!favs) favs=[]
-        for (var k in favs){
-          if(favs[k].id == id) {
-            console.log('already faved')
-            return
-          }
-        }
-        favs.push(fav)
-        wx.setStorage({
-            key : 'favs',
-            data : favs
-        })
-    }
-
-  },
   bindViewTapDownload: function(e) {
     console.log(e,'res.bindViewTapDownload')
     var id = parseInt(e.currentTarget.id) //0-50
@@ -355,16 +320,6 @@ Page({
     //    dataUrl: savedFilePath
     // })
 
-    var date = new Date()
-    var year = date.getFullYear()-2000
-    var month = date.getMonth() + 1
-    var day = date.getDate()
-    var today = year.toString() + month.toString() + day.toString()
-    wx.setStorage({
-        key : 'today',
-        data : today
-    })
-    console.log(today,'set today storage')
 
     var that = this
     wx.getStorage({
@@ -414,6 +369,12 @@ Page({
     var ly_data = lyutil.get_ly_data();
 
     var res = []
+    var date = new Date()
+    var year = date.getFullYear()-2000
+    var month = date.getMonth() + 1
+    var day = date.getDate()
+    var today = year.toString() + month.toString() + day.toString()
+    console.log(today,'today')
     for (var k in ly_data){
         // if (!ly_data.hasOwnProperty(k)) continue;
         ly_data[k].key = k
