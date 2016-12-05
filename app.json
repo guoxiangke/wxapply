@@ -1,11 +1,12 @@
 {
   "pages":[
+    "pages/index/index",
     "pages/lylist/lylist",
     "pages/fav/fav",
-    "pages/play/play",
     "pages/bg-audio/bg-audio",
-    "pages/index/index",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/player/player",
+    "pages/play/play"
   ],
   "window":{
     "backgroundTextStyle":"light",

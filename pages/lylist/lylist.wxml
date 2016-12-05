@@ -1,13 +1,16 @@
 <!--index.wxml-->
 <view class="container">
-    <image style="width:100%;" mode="aspectFit" src="../../image/007.png"></image>
     <view url="/pages/bg-audio/bg-audio" hover-class="navigator-hover" class="bgaudioplaystage weui-cell {{current_play_id>0 ? 'show' : 'hide'}}" >
         <image class="image-button image-button-play" src="../../image/music_d.png" alt="" />
         <text>正在播放【{{currentMusic.lyindex}}】{{currentMusic.title}}</text>
     </view>
+    <view class="head">
+        <view class="title">轻轻听</view>
+        <view class="desc">聆听关怀，知音同行！永不止息，每日更新！</view>
+    </view>
 
     <view class="page_body">
-      <scroll-view scroll-y="true" style="height: 300px;" bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll">
+      <scroll-view scroll-y="true" style="height: 400px;">
         <view bindtap="bindViewTapMenu" wx:key="categoryIndex" wx:for-items="{{lylist_categorys}}" wx:for-item="categoryItem" wx:for-index="categoryIndex" id="{{categoryIndex}}" class="ul category-item {{categoryItem.opened ? 'open' : 'close'}}">
             <view class="weui-flex weui-cell ly_category_list">
                 <text class="weui-flex__item">{{categoryItem.name}}</text>
